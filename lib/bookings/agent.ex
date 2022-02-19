@@ -27,4 +27,8 @@ defmodule Flightex.Bookings.Agent do
       false -> {:error, "Booking not found"}
     end
   end
+
+  def all do
+    Agent.get(__MODULE__, &Map.values/1)
+  end
 end
