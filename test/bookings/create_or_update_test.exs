@@ -1,6 +1,8 @@
 defmodule Flightex.Bookings.CreateOrUpdateTest do
   use ExUnit.Case, async: false
 
+  import Flightex.Factory
+
   alias Flightex.Bookings.{Agent, CreateOrUpdate}
 
   describe "call/1" do
@@ -19,12 +21,7 @@ defmodule Flightex.Bookings.CreateOrUpdateTest do
 
       {:ok, user_uuid} = Flightex.Users.CreateOrUpdate.call(user_params)
 
-      params = %{
-        complete_date: ~N[2001-05-07 03:05:00],
-        local_origin: "Brasilia",
-        local_destination: "Bananeiras",
-        user_id: user_uuid
-      }
+      params = build(:booking_params, user_id: user_uuid)
 
       {:ok, uuid} = CreateOrUpdate.call(params)
 
@@ -32,13 +29,19 @@ defmodule Flightex.Bookings.CreateOrUpdateTest do
 
       expected_response = %Flightex.Bookings.Booking{
         id: response.id,
-        complete_date: ~N[2001-05-07 03:05:00],
+        complete_date: ~N[2001-05-07 12:00:00],
         local_destination: "Bananeiras",
         local_origin: "Brasilia",
         user_id: user_uuid
       }
 
       assert response == expected_response
+    end
+
+    test "when user is invalid, returns an error" do
+      params = build(:booking_params)
+
+      assert CreateOrUpdate.call(params) == {:error, "User not found"}
     end
   end
 end

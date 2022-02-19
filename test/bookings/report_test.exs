@@ -58,12 +58,12 @@ defmodule Flightex.Bookings.ReportTest do
       Flightex.create_or_update_booking(params_booking_2)
       Flightex.create_or_update_booking(params_booking_3)
 
-      Report.generate("filtered_report.csv", ~N[2021-01-01 12:00:00], ~N[2021-12-31 12:00:00])
+      Flightex.generate_report(~N[2021-01-01 12:00:00], ~N[2021-12-31 12:00:00])
 
       line_1 = "12345678900,Ilhéus,Itajuípe,2021-08-31 12:00:00\n"
       line_2 = "12345678900,Santo André,Maceió,2021-01-07 12:00:00\n"
 
-      {:ok, file} = File.read("filtered_report.csv")
+      {:ok, file} = File.read("report.csv.csv")
 
       assert file =~ line_1
       assert file =~ line_2
